@@ -1,5 +1,4 @@
 const { Task } = require('../models/task');
-
 const { HttpError, ctrlWrapper } = require('../helpers');
 
 const listTasks = async (req, res) => {

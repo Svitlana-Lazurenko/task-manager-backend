@@ -1,34 +1,29 @@
-const express = require("express");
-const ctrl = require("../../controllers/categories");
+const express = require('express');
+const ctrl = require('../../controllers/categories');
 const {
   validateBody,
   isValidId,
   //   validateStatusBody,
   authenticate,
-} = require("../../middlewares");
-const { schemas } = require("../../models/categorie");
+} = require('../../middlewares');
+const { schemas } = require('../../models/category');
 
 const router = express.Router();
 
-router.get("/", authenticate, ctrl.listCategories);
+router.get('/', authenticate, ctrl.listCategories);
 
 // router.get("/:id", authenticate, isValidId, ctrl.getCategorieById);
 
-router.post(
-  "/",
-  authenticate,
-  validateBody(schemas.addOrUpdateSchema),
-  ctrl.addCategorie
-);
+router.post('/', authenticate, validateBody(schemas.addOrUpdateSchema), ctrl.addCategory);
 
-router.delete("/:id", authenticate, isValidId, ctrl.removeCategorie);
+router.delete('/:id', authenticate, isValidId, ctrl.removeCategory);
 
 router.put(
-  "/:id",
+  '/:id',
   authenticate,
   isValidId,
   validateBody(schemas.addOrUpdateSchema),
-  ctrl.updateCategorie
+  ctrl.updateCategory
 );
 
 module.exports = router;

@@ -1,5 +1,4 @@
 const { Category } = require('../models/category');
-
 const { HttpError, ctrlWrapper } = require('../helpers');
 
 const listCategories = async (req, res) => {
