@@ -1,47 +1,51 @@
 const { Task } = require('../models/task');
+const { Category } = require('../models/category');
 const { HttpError, ctrlWrapper } = require('../helpers');
 
 const listTasks = async (req, res) => {
-  const { _id: owner } = req.user;
-  const { page = 1, limit = 20 } = req.query;
-  const skip = (page - 1) * limit;
+  const { id } = req.params;
 
-  const resultTotal = await Task.find({ $and: [{ owner }] });
-  const totalNumber = resultTotal.length;
-  const result = await Category.find({ $and: [{ owner }] }, '', {
-    skip,
-    limit,
-  }).populate('category');
+  const result = await Task.find({ categoryId: id });
+  const totalNumber = result.length;
 
   res.json({
     total: totalNumber,
-    currentPage: page,
-    perPage: limit,
     tasks: result,
   });
 };
 
-// const getCategoryById = async (req, res) => {
-//   const { id } = req.params;
-//   const result = await Category.findById(id);
-//   if (!result) {
-//     throw HttpError(404, 'Not found');
-//   }
-//   res.json(result);
-// };
-
 const addTask = async (req, res) => {
-  const { _id: owner } = req.user;
-  const result = await Task.create({ ...req.body, owner });
-  res.status(201).json(result);
+  const { id } = req.params;
+
+  const resultCategory = await Category.findById(id);
+  if (!resultCategory) {
+    throw HttpError(404, 'Not found');
+  }
+
+  await Category.findByIdAndUpdate(id, {
+    numberOfTasks: (resultCategory.numberOfTasks += 1),
+  });
+
+  const resultTask = await Task.create({ ...req.body, categoryId: id });
+  res.status(201).json(resultTask);
 };
 
 const removeTask = async (req, res) => {
   const { id } = req.params;
-  const result = await Task.findByIdAndRemove(id);
-  if (!result) {
+
+  const resultTask = await Task.findByIdAndRemove(id);
+  if (!resultTask) {
     throw HttpError(404, 'Not found');
   }
+
+  const resultCategory = await Category.findById(resultTask.categoryId);
+  if (!resultCategory) {
+    throw HttpError(404, 'Not found');
+  }
+  await Category.findByIdAndUpdate(resultTask.categoryId, {
+    numberOfTasks: (resultCategory.numberOfTasks -= 1),
+  });
+
   res.status(200).json({
     message: 'Task deleted',
   });
@@ -58,7 +62,6 @@ const updateTask = async (req, res) => {
 
 module.exports = {
   listTasks: ctrlWrapper(listTasks),
-  //   getContactById: ctrlWrapper(getContactById),
   removeTask: ctrlWrapper(removeTask),
   addTask: ctrlWrapper(addTask),
   updateTask: ctrlWrapper(updateTask),

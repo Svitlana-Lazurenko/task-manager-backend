@@ -11,12 +11,10 @@ const categorySchema = new Schema(
     numberOfTasks: {
       type: Number,
       default: 0,
-    },
-    owner: {
-      type: Schema.Types.ObjectId,
-      ref: 'user',
+      required: [true, 'Number of tasks cannot be set'],
     },
   },
+
   { versionKey: false, timestamps: true }
 );
 
@@ -26,7 +24,6 @@ const addOrUpdateSchema = Joi.object({
   name: Joi.string().required().messages({
     'any.required': 'Missing required name field',
   }),
-  numberOfTasks: Joi.number(),
 });
 
 const schemas = {

@@ -1,30 +1,18 @@
-const express = require("express");
-const ctrl = require("../../controllers/tasks");
-const {
-  validateBody,
-  isValidId,
-  //   validateStatusBody,
-  authenticate,
-} = require("../../middlewares");
-const { schemas } = require("../../models/task");
+const express = require('express');
+const ctrl = require('../../controllers/tasks');
+const { validateBody, isValidId, authenticate } = require('../../middlewares');
+const { schemas } = require('../../models/task');
 
 const router = express.Router();
 
-router.get("/", authenticate, ctrl.listTasks);
+router.get('/:id', authenticate, ctrl.listTasks);
 
-// router.get("/:id", authenticate, isValidId, ctrl.getTaskById);
+router.post('/:id', authenticate, validateBody(schemas.addOrUpdateSchema), ctrl.addTask);
 
-router.post(
-  "/",
-  authenticate,
-  validateBody(schemas.addOrUpdateSchema),
-  ctrl.addTask
-);
-
-router.delete("/:id", authenticate, isValidId, ctrl.removeTask);
+router.delete('/:id', authenticate, isValidId, ctrl.removeTask);
 
 router.put(
-  "/:id",
+  '/:id',
   authenticate,
   isValidId,
   validateBody(schemas.addOrUpdateSchema),
