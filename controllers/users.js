@@ -60,6 +60,15 @@ const login = async (req, res) => {
   });
 };
 
+const getCurrent = async (req, res) => {
+  const { email, role } = req.user;
+
+  res.json({
+    email,
+    role,
+  });
+};
+
 const logout = async (req, res) => {
   const { _id } = req.user;
   await User.findByIdAndUpdate(_id, { token: '' });
