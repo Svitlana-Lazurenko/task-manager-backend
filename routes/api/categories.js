@@ -11,7 +11,7 @@ router.post('/', authenticate, validateBody(schemas.addOrUpdateSchema), ctrl.add
 
 router.delete('/:id', authenticate, isValidId, ctrl.removeCategory);
 
-router.put(
+router.patch(
   '/:id',
   authenticate,
   isValidId,
