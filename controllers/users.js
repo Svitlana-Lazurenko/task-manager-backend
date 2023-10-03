@@ -8,22 +8,27 @@ const { SECRET_KEY } = process.env;
 
 const register = async (req, res) => {
   const { email, password } = req.body;
+  
   const user = await User.findOne({ email });
-
   if (user) {
     throw HttpError(409, 'Email in use');
   }
 
   const hashPassword = await bcrypt.hash(password, 12);
-  const verificationToken = nanoid();
-
   const newUser = await User.create({
     ...req.body,
     password: hashPassword,
-    verificationToken,
   });
 
+   const payload = {
+    id: newUser._id,
+  };
+
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '24h' });
+  await User.findByIdAndUpdate(newUser._id, { token });
+
   res.status(201).json({
+    token,
     user: {
       email: newUser.email,
       role: newUser.role,
