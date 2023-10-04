@@ -15,7 +15,7 @@ const categorySchema = new Schema(
     },
   },
 
-  { versionKey: false, timestamps: true }
+  { versionKey: false, timestamps: { currentTime: ()=> Date.now().toDateString() } }
 );
 
 categorySchema.post('save', handleMongooseError);
