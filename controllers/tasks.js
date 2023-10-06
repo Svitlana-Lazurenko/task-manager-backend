@@ -46,9 +46,7 @@ const removeTask = async (req, res) => {
     numberOfTasks: (resultCategory.numberOfTasks -= 1),
   });
 
-  res.status(200).json({
-    message: 'Task deleted',
-  });
+  res.status(200).json(resultTask);
 };
 
 const updateTask = async (req, res) => {
