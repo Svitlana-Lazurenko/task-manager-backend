@@ -31,9 +31,7 @@ const removeCategory = async (req, res) => {
   });
   await Promise.all(arrayOfTaskPromises);
 
-  res.status(200).json({
-    message: 'Category deleted',
-  });
+  res.status(200).json(resultCategory);
 };
 
 const updateCategory = async (req, res) => {
