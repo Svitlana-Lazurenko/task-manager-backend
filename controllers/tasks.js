@@ -26,7 +26,9 @@ const addTask = async (req, res) => {
     numberOfTasks: (resultCategory.numberOfTasks += 1),
   });
 
-  const resultTask = await Task.create({ ...req.body, categoryId: id });
+  const date = new Date()
+
+  const resultTask = await Task.create({ ...req.body, categoryId: id, date: date.getTime() });
   res.status(201).json(resultTask);
 };
 
