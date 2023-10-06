@@ -20,6 +20,10 @@ const taskSchema = new Schema(
       type: String,
       required: [true, 'Set date of end for task'],
     },
+    date: {
+      type: String,
+      required: [true, 'Set date of end for task'],
+    },
     categoryId: {
       type: String,
       required: [true, 'Category cannot be set'],
